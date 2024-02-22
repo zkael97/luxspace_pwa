@@ -61,7 +61,6 @@ registerRoute(
   })
 );
 
-
 registerRoute(({url}) => url.origin === 'https://fonts.googleapis.com' || url.origin === 'https://fonts.gstatic.com', new NetworkFirst({
   cacheName: 'fonts',
   plugins: [
@@ -72,6 +71,25 @@ registerRoute(({url}) => url.origin === 'https://fonts.googleapis.com' || url.or
   ]
 }))
 
+registerRoute(({url}) => url.origin.includes("bwacharity.fly.dev"), new NetworkFirst
+({
+  cacheName : 'apidata',
+  plugins: [ 
+    new ExpirationPlugin({
+      maxAgeSeconds: 360,
+      maxEntries: 30
+    })
+  ]
+}))
+
+registerRoute(({url}) => /\.(kpe?g|png)$/i.test(url.pathname), new StaleWhileRevalidate({
+  cacheName: 'apiimage',
+  plugins: [
+    new ExpirationPlugin({
+      maxEntries: 30
+    })
+  ]
+}))
 
 self.addEventListener('install', function(event){
   console.log("SW Install");
