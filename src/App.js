@@ -9,12 +9,26 @@ import Footer from './components/Footer.js';
 
 
 function App() {
+  const [items, setItems] = React.useState([]);
+  
+  React.useEffect(function() {
+    (async function() {
+      const response = await fetch('https://bwacharity.fly.dev/items', {
+        headers:{
+          "Content-Type" : "application/json",
+          "accept" : "application/json"
+        }
+      });
+      const { nodes } = await response.json();
+      setItems(nodes);
+    })();
+  }, []);
   return (
     <>
       <Header />,
       <Hero />,
       <Browse />,
-      <Arrived />,
+      <Arrived items={items} />,
       <Clients />,
       <AsideMenu />
       <Footer />
